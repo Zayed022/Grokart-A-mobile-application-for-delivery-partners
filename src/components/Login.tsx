@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
   Home: undefined;
@@ -69,6 +70,7 @@ const Login = () => {
       );
 
       if (res.data?.deliveryPartner) {
+         await AsyncStorage.setItem('loginTime', JSON.stringify(Date.now()));
         Alert.alert('Success', 'Login successful');
         setTimeout(() => navigation.navigate('Home'), 500);
       } else {

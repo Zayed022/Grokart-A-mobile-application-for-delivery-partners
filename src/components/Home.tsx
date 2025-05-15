@@ -13,6 +13,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Grokart from "../assets/images/Grokart.png";
 import { useNavigation } from "@react-navigation/native";
 import LogoutButton from "./LogoutButton";
+import LogoutTimer from "./LogoutTimer";
+
+const WORK_DURATION_MS = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
 
 interface Item {
   _id: string;
@@ -136,12 +139,7 @@ const Home: React.FC = () => {
         >
           <Text style={styles.refreshButtonText}> Refresh</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={() => navigation.navigate("Logout")}
-        >
-          <Text>Logout</Text>
-        </TouchableOpacity>
+        
 
         <TouchableOpacity
           style={styles.profileButton}
@@ -150,6 +148,8 @@ const Home: React.FC = () => {
           <Text style={styles.profileButtonText}>My Profile</Text>
         </TouchableOpacity>
       </View>
+
+      <View><LogoutTimer /></View>
 
       {/* Orders List */}
       <ScrollView contentContainerStyle={styles.ordersContainer}>

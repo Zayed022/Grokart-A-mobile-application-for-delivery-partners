@@ -8,21 +8,18 @@ import Icon from '@react-native-vector-icons/ionicons';
 import { StyleSheet, TouchableOpacity, View, Image, Text } from 'react-native';
 import Grokart from "../assets/images/Grokart.png";
 import { useNavigation } from '@react-navigation/native';
+import LogoutTimer from './LogoutTimer';
 
 const Tab = createBottomTabNavigator();
 
 const Navbar = () => {
   const navigation = useNavigation();
   return (
+    <>
     <View style={styles.navbar}>
             <Image source={Grokart} style={{ width: 100, height: 30 }} />
            
-            <TouchableOpacity
-              style={styles.logoutButton}
-              onPress={() => navigation.navigate("Logout")}
-            >
-              <Text>Logout</Text>
-            </TouchableOpacity>
+            
     
             <TouchableOpacity
               style={styles.profileButton}
@@ -31,6 +28,11 @@ const Navbar = () => {
               <Text style={styles.profileButtonText}>My Profile</Text>
             </TouchableOpacity>
           </View>
+
+          <View><LogoutTimer/></View>
+          </>
+
+          
   );
 };
 

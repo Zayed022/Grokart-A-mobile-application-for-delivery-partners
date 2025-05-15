@@ -11,6 +11,7 @@ import UpdateProfile from "../components/UpdateProfile";
 import MyOrders from "../components/MyOrders";
 import LogoutButton from "../components/LogoutButton";
 import TermsAndConditions from "../components/TermsAndConditions";
+import DailyCollectionStatus from "../components/DailyCollectionStatus";
 
 
 const Stack = createStackNavigator();
@@ -32,6 +33,7 @@ const Stack = createStackNavigator();
       <Stack.Screen name="Update Details" component={UpdateProfile} />
       <Stack.Screen name="My Completed Orders" component={MyOrders} />
       <Stack.Screen name="My Earnings" component={MyEarnings} />
+      <Stack.Screen name="Daily Collection" component={DailyCollectionStatus} />
       <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
       
       

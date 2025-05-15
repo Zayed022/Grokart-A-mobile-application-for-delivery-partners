@@ -43,6 +43,14 @@ const MyProfile = () => {
       >
         <Text style={styles.menuText}>View My Earnings</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => navigation.navigate('Daily Collection')}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.menuText}>Payment to be Done</Text>
+      </TouchableOpacity>
     </ScrollView>
     </>
   );
