@@ -57,7 +57,7 @@ const Home: React.FC = () => {
   const [statusToUpdate, setStatusToUpdate] = useState<string>("");
   const navigation = useNavigation();
 
-  const validStatuses = ["Picked Up", "Out for Delivery", "Delivered"];
+  const validStatuses = ["Picked Up", "Out for Delivery", "Delivered", "Cancelled"];
 
   const fetchAssignedOrders = async () => {
     try {
