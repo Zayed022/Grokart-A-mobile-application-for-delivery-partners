@@ -19,47 +19,58 @@ const MyEarnings = () => {
   const [dailyHistory, setDailyHistory] = useState([]);
 
   useEffect(() => {
-    const fetchEarnings = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        const res = await axios.get('https://grokart-2.onrender.com/api/v1/delivery/earnings', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  const fetchEarnings = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const res = await axios.get('https://grokart-2.onrender.com/api/v1/delivery/earnings', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        const { totalDeliveries, totalEarnings, dailyHistory } = res.data;
-        setTotalDeliveries(totalDeliveries);
-        setTotalEarnings(totalEarnings);
-        setDailyHistory(dailyHistory);
-      } catch (err) {
-        console.error('Error fetching earnings:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const { totalDeliveries, totalEarnings, dailyHistory } = res.data;
 
-    fetchEarnings();
-  }, []);
+      // Sort daily history by date descending
+      const sortedHistory = [...dailyHistory].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+
+      setTotalDeliveries(totalDeliveries);
+      setTotalEarnings(totalEarnings);
+      setDailyHistory(sortedHistory);
+    } catch (err) {
+      console.error('Error fetching earnings:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchEarnings();
+}, []);
+
 
   const renderDayItem = ({ item }: any) => (
     <View style={styles.card}>
       <Text style={styles.cardDate}>{item.date}</Text>
-      <View style={styles.cardRow}>
-        <Text style={styles.cardLabel}>Deliveries:</Text>
-        <Text style={styles.cardValue}>{item.numberOfDeliveries}</Text>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Deliveries</Text>
+        <Text style={styles.value}>{item.numberOfDeliveries}</Text>
       </View>
-      <View style={styles.cardRow}>
-        <Text style={styles.cardLabel}>Base Earnings:</Text>
-        <Text style={styles.cardValue}>₹{item.dailyEarnings}</Text>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Base Earnings</Text>
+        <Text style={styles.value}>₹{item.dailyEarnings}</Text>
       </View>
-      <View style={styles.cardRow}>
-        <Text style={styles.cardLabel}>Incentive:</Text>
-        <Text style={styles.cardValue}>₹{item.incentive}</Text>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Incentive</Text>
+        <Text style={styles.value}>₹{item.incentive}</Text>
       </View>
-      <View style={styles.cardRow}>
-        <Text style={[styles.cardLabel, { fontWeight: 'bold' }]}>Total for Day:</Text>
-        <Text style={[styles.cardValue, styles.green]}>₹{item.totalEarningsForDay}</Text>
+
+      <View style={styles.row}>
+        <Text style={[styles.label, { fontWeight: 'bold' }]}>Total</Text>
+        <Text style={[styles.value, styles.totalAmount]}>₹{item.totalEarningsForDay}</Text>
       </View>
     </View>
   );
@@ -67,35 +78,41 @@ const MyEarnings = () => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#000" />
+        <ActivityIndicator size="large" color="#28a745" />
       </View>
     );
   }
 
   return (
     <>
-    <Navbar/>
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f9f9f9' }}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.header}>My Earnings</Text>
+      <Navbar />
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#f2f2f7' }}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.header}>My Earnings</Text>
 
-        <View style={styles.summaryBox}>
-          <Text style={styles.summaryText}>Total Deliveries</Text>
-          <Text style={styles.summaryValue}>{totalDeliveries}</Text>
+          <View style={styles.summaryBox}>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryLabel}>Total Deliveries</Text>
+              <Text style={styles.summaryValue}>{totalDeliveries}</Text>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryLabel}>Total Earnings</Text>
+              <Text style={[styles.summaryValue, styles.totalEarnings]}>
+                ₹{totalEarnings}
+              </Text>
+            </View>
+          </View>
 
-          <Text style={[styles.summaryText, { marginTop: 12 }]}>Total Earnings</Text>
-          <Text style={[styles.summaryValue, styles.green]}>₹{totalEarnings}</Text>
-        </View>
-
-        <Text style={styles.sectionTitle}>Daily Breakdown</Text>
-        <FlatList
-          data={dailyHistory}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={renderDayItem}
-          scrollEnabled={false}
-        />
-      </ScrollView>
-    </SafeAreaView>
+          <Text style={styles.sectionTitle}>Daily Breakdown</Text>
+          <FlatList
+            data={dailyHistory}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={renderDayItem}
+            scrollEnabled={false}
+          />
+        </ScrollView>
+      </SafeAreaView>
     </>
   );
 };
@@ -104,8 +121,8 @@ export default MyEarnings;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: '#f9f9f9',
+    padding: 16,
+    backgroundColor: '#f2f2f7',
   },
   centered: {
     flex: 1,
@@ -113,37 +130,49 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 24,
-    color: '#333',
+    marginVertical: 20,
+    color: '#1e1e1e',
   },
   summaryBox: {
     backgroundColor: '#fff',
-    padding: 20,
     borderRadius: 12,
+    padding: 16,
     marginBottom: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
-  summaryText: {
-    fontSize: 16,
-    color: '#555',
+  summaryItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  summaryLabel: {
+    fontSize: 14,
+    color: '#777',
+    marginBottom: 6,
   },
   summaryValue: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#222',
+    color: '#333',
   },
-  green: {
+  totalEarnings: {
     color: '#28a745',
   },
+  divider: {
+    width: 1,
+    backgroundColor: '#eee',
+    marginHorizontal: 8,
+  },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
     marginBottom: 16,
     color: '#444',
@@ -155,28 +184,31 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.04,
     shadowRadius: 3,
-    elevation: 2,
+    elevation: 1,
   },
   cardDate: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 12,
-    color: '#333',
+    marginBottom: 10,
+    color: '#1f2937',
   },
-  cardRow: {
+  row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginVertical: 2,
   },
-  cardLabel: {
+  label: {
     fontSize: 15,
     color: '#666',
   },
-  cardValue: {
+  value: {
     fontSize: 15,
-    fontWeight: '500',
-    color: '#333',
+    fontWeight: '600',
+    color: '#222',
+  },
+  totalAmount: {
+    color: '#28a745',
   },
 });

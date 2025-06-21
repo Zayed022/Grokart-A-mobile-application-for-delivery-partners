@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+  Image,
+} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Navbar from './Navbar';
@@ -47,7 +54,7 @@ const ViewDetails = () => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#4B5563" />
+        <ActivityIndicator size="large" color="#6366F1" />
       </View>
     );
   }
@@ -62,33 +69,37 @@ const ViewDetails = () => {
 
   return (
     <>
-    <Navbar/>
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>My Profile Details</Text>
+      <Navbar />
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.heading}>Delivery Partner Profile</Text>
 
-      <View style={styles.card}>
-        <Detail label="Name" value={details.name} />
-        <Detail label="Phone" value={details.phone} />
-        <Detail label="Email" value={details.email} />
-        <Detail label="Vehicle Number" value={details.vehicleNumber} />
-        <Detail label="License Number" value={details.licenseNumber} />
-        <Detail label="Approved" value={details.isApproved ? 'Yes' : 'No'} />
-        <Detail label="Available" value={details.isAvailable ? 'Yes' : 'No'} />
-        <Detail label="Account Created At" value={new Date(details.createdAt).toLocaleString()} />
-      </View>
+        <View style={styles.card}>
+          <SectionTitle title="Basic Details" />
+          <Detail label="Name" value={details.name} />
+          <Detail label="Phone" value={details.phone} />
+          <Detail label="Email" value={details.email} />
+          <Detail label="Vehicle Number" value={details.vehicleNumber} />
+          <Detail label="License Number" value={details.licenseNumber} />
+          <Detail label="Approved" value={details.isApproved ? 'Yes' : 'No'} />
+          <Detail label="Available" value={details.isAvailable ? 'Yes' : 'No'} />
+          <Detail label="Account Created" value={new Date(details.createdAt).toLocaleString()} />
+        </View>
 
-      <Text style={styles.subHeading}>Uploaded Documents</Text>
-
-      <View style={styles.card}>
-        <ImageSection label="Aadhaar Proof" uri={details.aadhaarProof} />
-        <ImageSection label="PAN Card Proof" uri={details.panCardProof} />
-        <ImageSection label="PUC Proof" uri={details.pucProof} />
-        <ImageSection label="License Proof" uri={details.licenseProof} />
-      </View>
-    </ScrollView>
+        <View style={styles.card}>
+          <SectionTitle title="Uploaded Documents" />
+          <ImageSection label="Aadhaar Card" uri={details.aadhaarProof} />
+          <ImageSection label="PAN Card" uri={details.panCardProof} />
+          <ImageSection label="PUC Document" uri={details.pucProof} />
+          <ImageSection label="License Image" uri={details.licenseProof} />
+        </View>
+      </ScrollView>
     </>
   );
 };
+
+const SectionTitle = ({ title }: { title: string }) => (
+  <Text style={styles.sectionTitle}>{title}</Text>
+);
 
 const Detail = ({ label, value }: { label: string; value: string }) => (
   <View style={styles.detailRow}>
@@ -98,7 +109,7 @@ const Detail = ({ label, value }: { label: string; value: string }) => (
 );
 
 const ImageSection = ({ label, uri }: { label: string; uri: string }) => (
-  <View style={{ marginBottom: 16 }}>
+  <View style={styles.imageSection}>
     <Text style={styles.label}>{label}</Text>
     <Image source={{ uri }} style={styles.image} />
   </View>
@@ -109,61 +120,67 @@ export default ViewDetails;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: '#F9FAFB',
+    flexGrow: 1,
   },
   centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-  },
-  errorText: {
-    fontSize: 16,
-    color: '#EF4444',
+    backgroundColor: '#F9FAFB',
   },
   heading: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  subHeading: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 26,
+    fontWeight: '800',
     color: '#1F2937',
-    marginVertical: 20,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#374151',
+    marginBottom: 12,
   },
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 4,
   },
   detailRow: {
-    marginBottom: 12,
+    marginBottom: 14,
   },
   label: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#374151',
+    color: '#6B7280',
     marginBottom: 4,
   },
   value: {
     fontSize: 16,
-    color: '#1F2937',
+    fontWeight: '500',
+    color: '#111827',
+  },
+  imageSection: {
+    marginBottom: 20,
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 220,
     borderRadius: 10,
     backgroundColor: '#E5E7EB',
     resizeMode: 'cover',
-    marginTop: 8,
+    marginTop: 6,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#DC2626',
+    fontWeight: '600',
   },
 });
