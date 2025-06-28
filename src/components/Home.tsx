@@ -22,6 +22,8 @@ interface Item {
   name: string;
   quantity: number;
   price: number;
+  image: string;
+  description: string;
 }
 
 interface AddressDetails {
@@ -138,8 +140,11 @@ const Home: React.FC = () => {
         <Text style={styles.sectionLabel}>📦 Items</Text>
         {order.items.map((item) => (
           <Text key={item._id} style={styles.itemText}>
-            • {item.name} × {item.quantity} = ₹{item.price}
+            • {item.name} ({item.description}) × {item.quantity}  = ₹{item.price}
+            
+            
           </Text>
+           
         ))}
 
         <Text style={styles.sectionLabel}>📍 Address</Text>
