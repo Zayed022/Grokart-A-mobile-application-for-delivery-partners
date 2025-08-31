@@ -1,21 +1,51 @@
 import 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './src/navigation/AppNavigator'
+import { NavigationContainer, } from '@react-navigation/native';
+import AppNavigator from './src/navigation/AppNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen';
-console.log(SplashScreen)
+import PushNotification from 'react-native-push-notification';
+import { Platform, Vibration, PermissionsAndroid } from 'react-native';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+ useEffect(() => {
+  // Configure Notifications
+  PushNotification.configure({
+    onNotification: function (notification) {
+      console.log("LOCAL NOTIFICATION:", notification);
+    },
+    requestPermissions: Platform.OS === 'ios',
+  });
+
+  // Create Channel
+  PushNotification.createChannel(
+    {
+      channelId: "grokart-orders",
+      channelName: "Grokart Order Alerts",
+      channelDescription: "Alerts delivery partners for new orders",
+      playSound: true,
+      soundName: "default",
+      importance: 4,
+      vibrate: true,
+    },
+    (created) => console.log(`createChannel returned '${created}'`)
+  );
+
+  // 🟢 TEST: fire a notification after 5s
+ 
+
+}, []);
+
+
 
   useEffect(() => {
     const initializeApp = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
 
-        // (Optional) Add a real token validation with backend
         if (token) {
           setIsAuthenticated(true);
         } else {
@@ -34,14 +64,11 @@ const App = () => {
 
     initializeApp();
   }, []);
-  
 
   return (
-    
-      <NavigationContainer>
-        <AppNavigator/>
-      </NavigationContainer>
-   
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
   );
 };
 
