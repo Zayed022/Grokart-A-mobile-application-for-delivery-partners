@@ -118,10 +118,11 @@ const Register = () => {
     files.forEach(({ key, file }) => {
       if (file) {
         data.append(key, {
-          uri: file.uri,
-          name: file.fileName,
-          type: file.type,
-        });
+  uri: file.uri,
+  name: file.fileName || `${key}.jpg`,
+  type: file.type || 'image/jpeg',
+});
+
       }
     });
 
